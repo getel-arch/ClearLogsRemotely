@@ -4,10 +4,10 @@
  
 ## Build
 ```
-gcc .\src\clear_log_remotely.c -o clear_log_remotely.exe -s -m64 -lwevtapi
+gcc .\src\clear_logs_remotely.c -o clear_logs_remotely_x64.exe -s -m64 -lwevtapi
 ```
 
 ## Usage
 ```
-clear_log_remotely.exe <remote_server> <log_name>
+clear_logs_remotely_x64.exe <remote_server> <log_name>
 ```
