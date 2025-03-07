@@ -12,8 +12,10 @@ LPCWSTR ConvertToLPCWSTR(const char* str) {
 int main(int argc, char* argv[]) {
     if (argc != 3) {
         printf("Usage: %s <remote_server> <log_name>\n", argv[0]);
-        return 1;
+        GOTO cleanup;
     }
+
+    BOOL result = FALSE;
 
     LPCWSTR remoteServer = ConvertToLPCWSTR(argv[1]);
     LPCWSTR logName = ConvertToLPCWSTR(argv[2]);
@@ -26,25 +28,24 @@ int main(int argc, char* argv[]) {
     EVT_HANDLE hSession = EvtOpenSession(EvtRpcLogin, &rpcLogin, 0, 0);
     if (hSession == NULL) {
         printf("Failed to open session, error %d", GetLastError());
-        free((void*)remoteServer);
-        free((void*)logName);
-        return 1;
+        GOTO cleanup;
     }
 
     printf("[+] Clearing event log\n");
     if (!EvtClearLog(hSession, logName, NULL, 0)) {
         printf("Failed to clear event log, error %d", GetLastError());
-        EvtClose(hEventLog);
-        EvtClose(hSession);
-        free((void*)remoteServer);
-        free((void*)logName);
-        return 1;
+        GOTO cleanup;
     }
 
     printf("[+] Event log cleared successfully.\n");
-    EvtClose(hEventLog);
-    EvtClose(hSession);
+    result = TRUE;
+    GOTO cleanup;
+    
+cleanup:
+    if (hSession) {
+        EvtClose(hSession);
+    }
     free((void*)remoteServer);
     free((void*)logName);
-    return 0;
+    return result;
 }
