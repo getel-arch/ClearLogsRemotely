@@ -31,16 +31,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    printf("[+] Opening event log: %S\n", logName);
-    EVT_HANDLE hEventLog = EvtOpenLog(hSession, logName, EvtOpenChannelPath);
-    if (hEventLog == NULL) {
-        printf("Failed to open event log, error %d", GetLastError());
-        EvtClose(hSession);
-        free((void*)remoteServer);
-        free((void*)logName);
-        return 1;
-    }
-
     printf("[+] Clearing event log\n");
     if (!EvtClearLog(hSession, logName, NULL, 0)) {
         printf("Failed to clear event log, error %d", GetLastError());
